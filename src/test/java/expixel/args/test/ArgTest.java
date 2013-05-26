@@ -39,9 +39,6 @@ public class ArgTest {
 		EasyArgs.processArguments(args, this);
 		System.out.println("Container: " + this.toString());
 		
-		System.out.print("Hello!" + (char)13);
-		System.out.print("      ");
-		System.out.print("Hello");
 	}
 
 	@Override
