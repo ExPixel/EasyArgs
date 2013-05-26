@@ -32,9 +32,16 @@ public class EasyArgs {
 					processBooleanArgument(args, container, field, argument);
 			} else if(field.getType().equals(Integer.TYPE)) {
 				processIntegerArgument(args, container, field, argument);
+			} else if(field.getType().equals(Float.TYPE)) {
+				processFloatArgument(args, container, field, argument);
+			} else if(field.getType().equals(Double.TYPE)) {
+				processDoubleArgument(args, container, field, argument);
+			} else if(field.getType().equals(Long.TYPE)) {
+				processLongArgument(args, container, field, argument);
+			} else if(field.getType().equals(Short.TYPE)) {
+				processShortArgument(args, container, field, argument);
 			}
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -52,35 +59,57 @@ public class EasyArgs {
 	}
 	
 	private static void processIntegerArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
-		for(int i = 0; i < args.length; i++) {
-			String arg = args[i];
-			if(argumentMatch( arg, argument )) {
-				String intString = null;
-				if(i < args.length - 1) {
-					intString = args[i + 1];
-				}
-				if(intString != null) {
-					intString = intString.trim();
-					try {
-						int val = Integer.parseInt(intString);
-						field.set(container, val);
-					} catch(NumberFormatException e) {
-					}
-				}
-				return;
-			}
+		String stringValue = getValue(args, container, field, argument);
+		try {
+			field.set(container, Integer.parseInt(stringValue));
+		} catch(NumberFormatException e) {
+			
 		}
 	}
 	
+	private static void processFloatArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
+		String stringValue = getValue(args, container, field, argument);
+		try {
+			field.set(container, Float.parseFloat(stringValue));
+		} catch(NumberFormatException e) {}
+	}
+	
+	private static void processDoubleArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
+		String stringValue = getValue(args, container, field, argument);
+		try {
+			field.set(container, Double.parseDouble(stringValue));
+		} catch(NumberFormatException e) {}
+	}
+	
+	private static void processLongArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
+		String stringValue = getValue(args, container, field, argument);
+		try {
+			field.set(container, Long.parseLong(stringValue));
+		} catch(NumberFormatException e) {}
+	}
+	
+	private static void processShortArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
+		String stringValue = getValue(args, container, field, argument);
+		try {
+			field.set(container, Short.parseShort(stringValue));
+		} catch(NumberFormatException e) {}
+	}
+	
 	private static void processStringArgument(String[] args, Object container, Field field, Argument argument) throws IllegalArgumentException, IllegalAccessException {
+		String stringValue = getValue(args, container, field, argument);
+		field.set(container, stringValue);
+	}
+	
+	private static String getValue(String[] args, Object container, Field field, Argument argument) {
 		for(int i = 0; i < args.length; i++) {
 			String arg = args[i];
 			if(argumentMatch( arg, argument )) {
 				if(i < args.length - 1) {
-					field.set(container, args[i + 1]);
+					return args[i + 1];
 				}
 			}
 		}
+		return null;
 	}
 	
 	public static boolean argumentMatch(String str, Argument argument) {

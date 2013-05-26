@@ -3,6 +3,7 @@ package expixel.args.test;
 import java.util.Arrays;
 
 import expixel.args.Argument;
+import expixel.args.BadArgumentException;
 import expixel.args.EasyArgs;
 
 public class ArgTest {
